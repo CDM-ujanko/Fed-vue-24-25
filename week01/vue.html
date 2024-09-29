@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Intro</title>
+</head>
+<body>
+    <h1>Hello Vue!</h1>
+    <div id="app">
+        {{ message }}
+
+        <input v-model="message" type="text">
+
+        <div v-if="show">I am the new div!</div>
+        <div v-else>I am the other one!</div>
+
+        <ul>
+            <li v-for="(item, i) in list">{{i}}:{{ item }}</li>
+        </ul>
+
+        <ul>
+            <li v-for="(val, key) in obj">{{key}} : {{ val }}</li>
+        </ul>
+
+        <button v-on:click="myFirstMethod">Click me to call a method</button>
+
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+           data() {
+            return {
+                message: 'Hello world!',
+                show: false,
+                list: ['One', 'Five', 'Seven'],
+                obj: {name: 'Boban', lname: 'Rakic'}
+            }
+           },
+           methods: {
+            myFirstMethod() {
+                console.log('hello world!');
+            }
+           } 
+        }).mount('#app')
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue TODO</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="input">
+        <button v-on:click="addToList">Add</button>
+
+        <ul>
+            <li v-for="item in list">{{item}}</li>
+        </ul>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    input: '',
+                    list: []
+                }
+            },
+            methods: {
+                addToList() {
+                    console.log('I see a click!', this.input);
+                    if (this.input.length === 0) {
+                        return;
+                    }
+
+
+                    this.list.push(this.input);
+                    this.input = '';
+
+                }
+            }
+        }).mount('#app')
+
+
+    </script>
+
+</body>
+
+</html>

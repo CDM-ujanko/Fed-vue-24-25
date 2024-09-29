@@ -6,6 +6,48 @@
     <title>Week 1 TODO</title>
 </head>
 <body>
-    
+<h1>Hello World!</h1>
+    <input type="text" id="input">
+    <button type="submit" id="button">Add</button>
+    <ul id="list">
+
+    </ul>
+
+    <script>
+        let input = document.getElementById('input');
+        let button = document.getElementById('button');
+        let list =  document.getElementById('list');
+
+        console.log(input, button);
+        
+        // button.onclick = () => {
+        //     console.log('inline event!');
+        // };
+
+        // button.onclick = () => {
+        //     console.log('inline event! 2');
+        // };
+
+
+        // button.addEventListener('click', () => {
+        //     console.log('click!');
+        // });
+
+        function myEventHandler() {
+            console.log('click! version 2',  input.value);
+            if (input.value.length === 0) {
+                return;
+            }
+
+            let li = document.createElement('li');
+            li.innerText = input.value;
+            list.appendChild(li);
+            input.value = '';
+        }
+
+        button.addEventListener('click', myEventHandler);
+
+
+    </script>
 </body>
 </html>
