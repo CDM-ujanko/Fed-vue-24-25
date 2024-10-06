@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computed Properties</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+        <h2>Hello {{fistName}} {{lastName}}</h2>
+
+        <h2>Hello {{name}}</h2>
+
+        <input type="date" v-model="dob" />
+
+
+        <div v-if="dob">
+            You were 18 at: {{ dob18 }}
+        </div>
+
+        <input type="text" v-model="name">
+
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    message: 'Hello World!',
+                    fistName: 'Bob',
+                    lastName: 'Belcher',
+                    dob: ''
+                }
+
+            },
+
+            computed: {
+                name: {
+                    get() {
+                        return this.fistName + ' ' + this.lastName + '' + this.dob18;
+                    },
+
+                    set(val) {
+                        this.fistName = val;
+                        this.lastName = '';
+                    }
+                },
+
+                dob18() {
+                    let dob = new Date(this.dob);
+                    dob.setFullYear(dob.getFullYear() + 18);
+                    return dob.toDateString();
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
