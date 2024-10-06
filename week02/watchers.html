@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watchers</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+        <input v-model="message" type="text">
+
+        {{ list }}
+
+        <ul>
+            <li v-for="(item, i) in list">{{ i }}: {{item}} <button v-on:click="removeFromList(i)">Remove</button></li>
+        </ul>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    message: 'Hello World!',
+                    list: ['one', 'two', 'cow'],
+                    student: {
+                        name: 'Bob',
+                        address: {
+                          zip: 11000,
+                          city: "Belgrade"  
+                        }
+                    }
+                }
+            },
+
+            watch: {
+                message: function (newVal, oldVal) {
+                    console.log('The new value ', newVal);
+                    console.log('The OLD value ', oldVal);
+                    this.message
+                },
+
+                list: {
+                    handler: function (newVal, oldVal) {
+                        console.log('The new value ', newVal);
+                        console.log('The OLD value ', oldVal);
+                    },
+                    deep: true
+                },
+                student: {
+                    handler: function (newVal, oldVal) {
+                        console.log('The new value ', newVal);
+                        console.log('The OLD value ', oldVal);
+                    },
+                    deep: true
+                }
+            },
+
+            methods: {
+                removeFromList(i) {
+                    this.list.splice(i, 1);
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
