@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+
+    <style>
+        div {
+            padding: 40px;
+        }
+
+        #div1 {
+            background-color: bisque;
+        }
+
+
+        #div2 {
+            background-color: brown;
+        }
+
+
+        #div3 {
+            background-color: goldenrod;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div3">
+        DIV 3
+        <div id="div2">
+            DIV 2
+            <div id="div1">
+                DIV 1
+                <button id="button">Click me!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let div1 = document.getElementById('div1');
+        let div2 = document.getElementById('div2');
+        let div3 = document.getElementById('div3');
+        let button = document.getElementById('button');
+
+        // let x = 3;
+        // button.onclick = (e) => {
+        //     console.log('My inline event', e);
+        // };
+
+        // x = 7;
+        // button.onclick = (e) => {
+        //     console.log('My inline event 2!', e);
+        // };
+
+        // let buttonClickHandler = (e) => {
+        //     console.log('My event handler 2!', e);
+        // };
+
+        // function buttonClickHandler(e) {
+        //     console.log('My event handler 2!', e);
+        // };
+
+        // button.addEventListener('click', buttonClickHandler);
+
+        // setTimeout(() => {
+        //     console.log('timeout!')
+        //     button.removeEventListener('click', buttonClickHandler);
+        // }, 5000);
+
+        button.addEventListener('click', (e) => {
+            console.log('Button CLICK', e.target);
+        });
+
+        div1.addEventListener('click', (e) => {
+            e.stopPropagation();
+            console.log('div1 CLICK', e.target);
+        });
+
+        div2.addEventListener('click', (e) => {
+            console.log('div2 CLICK', e.target);
+        });
+
+        div3.addEventListener('click', (e) => {
+            console.log('div3 CLICK', e.target);
+        });
+
+    </script>
+</body>
+
+</html>
