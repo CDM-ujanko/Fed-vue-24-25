@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Events vue</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+        <button v-if="showButton"
+                @click="myVueEventHandler($event, 17, 18)"
+                id="button">Click me!</button>
+
+        <input type="text"
+               :value="message"
+               v-on:input="(e) => message = e.target.value">
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    message: 'Hello World!',
+                    showButton: true
+                }
+            },
+
+            mounted() {
+                // let button = document.getElementById('button');
+                // button.addEventListener('click', () => {
+                //     console.log('button is clicked!');
+                // });
+
+                // console.log(button);
+                // this.showButton = false;
+                // setTimeout(() => {
+                //     this.showButton = true;
+                //     console.log(button)
+                // }, 3000)
+            },
+
+            methods: {
+                myVueEventHandler(e, x, y) {
+                    console.log('Vue event', e, x, y);
+                },
+
+                onType(e) {
+                    this.message = e.target.value;
+                }
+            }
+        }).mount('#app');
+
+    </script>
+    </script>
+</body>
+
+</html>
