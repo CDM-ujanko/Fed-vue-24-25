@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Components</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ message }}</h1>
+        <counter v-for="i in counters"
+                 :number="i"></counter>
+
+        <button @click="counters++">Add counter</button>
+        <br>
+
+        <input v-model="name">
+        <greeter v-if="name"
+                 :name="name"
+                 @name-change="onNameChange"></greeter>
+
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        const app = createApp({
+            data() {
+                return {
+                    message: 'Hello World!',
+                    counters: 3,
+                    name: 'Boban'
+                }
+            },
+
+
+            methods: {
+                onNameChange(payload) {
+                    console.log('Parent saw a name change event!', payload);
+                    this.name = payload;
+                }
+            }
+        });
+        // console.log(app);
+
+        app.component('counter', {
+            template: `
+                {{ count }} 
+                <button @click="count++">Add 1</button>
+                <br>
+            `,
+            props: {
+                number: {
+                    type: Number,
+                    required: true,
+                    default: () => 6
+                }
+            },
+            data() {
+                return {
+                    count: 0,
+                }
+            },
+
+            watch: {
+                count: function () {
+                    console.log('The value of count changed!', this.number, this.count);
+                }
+            }
+        })
+
+        app.component('greeter', {
+            template: `
+                <h3>Hello {{ name }}! Nice to meet you </h3>
+                <br>
+            `,
+            emits: ['name-change'],
+            props: {
+                name: {
+                    type: String,
+                    required: true
+                }
+            },
+
+            data() { return {} },
+
+            mounted() {
+                setTimeout(() => {
+                    // VERY BAD!! NO NO NO!
+                    // this.name = 'Marko';
+
+                    console.log('Timeout trigger in greeter!');
+                    this.$emit('name-change', 'Marko');
+                }, 3000)
+            }
+        })
+
+        app.mount('#app')
+
+    </script>
+</body>
+
+</html>

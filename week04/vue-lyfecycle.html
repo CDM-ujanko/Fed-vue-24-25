@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Vue lifecycle</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>blabla</p>
+        {{ message }}
+        {{ counter }}
+        <button @click="counter++">Add one</button>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp } = Vue;
+
+        const app = createApp({
+            data() {
+                return {
+                    message: 'Hello World!',
+                    counter: 0
+                }
+            },
+
+            created() {
+                console.log('created', document.getElementById('app').innerHTML);
+            },
+
+            mounted() {
+                console.log('mounted', document.getElementById('app').innerHTML);
+            },
+
+            beforeUpdate() {
+                console.log(this.message);
+            },
+
+            updated() {
+                console.log('Updated!', this.message);
+            },
+
+            methods: {
+            }
+        });
+        console.log(app);
+        app.mount('#app')
+
+    </script>
+</body>
+
+</html>
