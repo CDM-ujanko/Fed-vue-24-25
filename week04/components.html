@@ -6,6 +6,15 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <title>Components</title>
+
+    <style>
+        .counter {
+            border: 1px solid orchid;
+            border-radius: 30px;
+            padding: 30px;
+            margin: 30px;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,9 +27,13 @@
         <br>
 
         <input v-model="name">
-        <greeter v-if="name"
+        <!-- <greeter v-if="name"
                  :name="name"
-                 @name-change="onNameChange"></greeter>
+                 @name-change="onNameChange"></greeter> -->
+
+        <greeter v-for="n in names"
+                 :name="n.name"
+                 :lname="n.lname"></greeter>
 
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -33,7 +46,10 @@
                 return {
                     message: 'Hello World!',
                     counters: 3,
-                    name: 'Boban'
+                    name: 'Boban',
+                    // names: ['Marko', 'Boban', 'Uros']
+                    names: [{ name: 'Boban', lname: 'Rakic' }, { name: 'bob', lname: 'Rakic' }]
+
                 }
             },
 
@@ -49,9 +65,11 @@
 
         app.component('counter', {
             template: `
-                {{ count }} 
-                <button @click="count++">Add 1</button>
-                <br>
+                <div class="counter">
+                    <p>My internal count is: {{ count }} </p>
+                    <p>Number pass from parent: {{ number }}</p>
+                    <button @click="count++">Add 1</button>
+                </div>
             `,
             props: {
                 number: {
@@ -75,7 +93,7 @@
 
         app.component('greeter', {
             template: `
-                <h3>Hello {{ name }}! Nice to meet you </h3>
+                <h3>Hello {{ name }}, {{ lname }}! Nice to meet you </h3>
                 <br>
             `,
             emits: ['name-change'],
@@ -83,6 +101,9 @@
                 name: {
                     type: String,
                     required: true
+                },
+                lname: {
+                    type: String
                 }
             },
 
