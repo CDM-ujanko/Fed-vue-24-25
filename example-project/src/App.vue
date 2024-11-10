@@ -1,9 +1,26 @@
 <template>
-  <nav>
-    <RouterLink to="/">Go to Home</RouterLink>
-    <RouterLink to="/about">Go to About</RouterLink>
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <RouterLink to="/"
+                      class="nav-link">
+            Go to Home
+          </RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink to="/about"
+                      class="nav-link">
+            Go to About
+          </RouterLink>
+        </li>
+
+      </ul>
+    </div>
   </nav>
-  <RouterView />
+  <nav>
+  </nav>
+  <RouterView class="container py-3" />
 </template>
 
 
