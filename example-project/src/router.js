@@ -9,7 +9,7 @@ import NotFoundView from './views/NotFoundView.vue';
 const routes = [
     { path: '/', component: HomeView },
     { path: '/about', component: AboutView },
-    { path: '/post/:id(\\d+)', component: PostView },
+    { path: '/post/:id', component: PostView },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView },
 ]
 

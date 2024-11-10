@@ -1,11 +1,5 @@
 <template>
-
-    <header>
-
-        <div class="wrapper">
-            <HelloWorld msg="You did it!" />
-        </div>
-
+    <div>
         <div class="container">
             <div class="row">
                 <Card v-for="(c, i) in cards"
@@ -18,26 +12,16 @@
                 </Card>
             </div>
         </div>
-
-        <!-- <div v-for="(stvar, blabla) in items">{{ blabla }} {{ stvar }}</div> -->
-    </header>
-
-    <div>
-        <h2>This is the Home page!</h2>
     </div>
 </template>
 
 <script>
-import HelloWorld from '../components/HelloWorld.vue'
-import Counter from '../components/Counter.vue';
 import Card from '../components/Card.vue';
 
 export default {
     name: 'HomeView',
 
     components: {
-        HelloWorld,
-        Counter,
         Card
     },
 

@@ -1,20 +1,34 @@
 <template>
     <div>
-        <h2>This is the post page!</h2>
-        {{ $route.params.id }}
+        <h1>{{ post.title }}</h1>
+        <p>Posted: {{ post.datePosted }}</p>
+        <article>{{ post.text }}</article>
     </div>
 </template>
 
 <script>
+import { getPost } from '@/data/posts.js';
+
 export default {
     name: 'PostView',
     data() {
         return {
+            post: {}
         }
     },
 
     mounted() {
-        console.log(this.$route.params)
+        this.getPost();
+    },
+
+    methods: {
+        getPost() {
+            try {
+                this.post = getPost(this.$route.params.id);
+            } catch(err) {
+                this.$router.push('/not-found');
+            }  
+        }
     }
 }
 </script>
