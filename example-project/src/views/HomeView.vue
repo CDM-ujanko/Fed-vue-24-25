@@ -1,60 +1,42 @@
 <template>
     <div>
         <div class="container">
-            <div class="row">
-                <Card v-for="(c, i) in cards"
-                      class="col-4 g-1"
-                      :card="c"
-                      :index="i"
-                      :can-left="i > 0"
-                      :can-right="i < cards.length - 1"
-                      @remove-card="removeCard">
-                </Card>
+            <div class="row row-cols-2 row-cols-md-3 g-1">
+                <div v-for="p in posts"
+                    class="col">
+                    <div class="card border-dark h-100">
+                        <div class="card-header">Article:</div>
+                        <div class="card-body text-dark">
+                            <img width="200" :src="'/src/assets/post-images/' + p.picture" class="card-img-top" alt="Post image">
+
+                            <h5 class="card-title">
+                                <RouterLink :to="`/post/${p.id}`">{{
+                                    p.title
+                                }}</RouterLink>
+                            </h5>
+                            <p class="card-text">{{ p.text }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Posted: {{ p.datePosted }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import Card from '../components/Card.vue';
+import { getAll } from '@/data/posts.js';
 
 export default {
     name: 'HomeView',
 
-    components: {
-        Card
-    },
+    components: {},
 
     data() {
         return {
-            message: 'Hello world!',
-            counters: 5,
-            items: ['pera', 'zika', 'laza', 2, { title: 'blas' }],
-            cards: [
-                {
-                    title: 'Card title 1',
-                    text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.'
-                },
-                {
-                    title: 'Card title 2',
-                    text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.'
-                },
-                {
-                    title: 'Card title 3',
-                    text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.'
-                },
-                {
-                    title: 'Card title 4',
-                    text: 'Som equick example text to build on the card title and make up the bulk of the card\'s content.'
-                }
-            ]
-        }
-    },
-
-    methods: {
-        removeCard(payload) {
-            let card = this.cards.splice(payload, 1)[0];
-            console.log('card', payload, card);
+            posts: getAll()
         }
     }
 

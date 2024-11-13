@@ -1,5 +1,6 @@
 <template>
     <div>
+        <img class="w-100" :src="'/src/assets/post-images/' + post.picture" alt="Post image">
         <h1>{{ post.title }}</h1>
         <p>Posted: {{ post.datePosted }}</p>
         <article>{{ post.text }}</article>
