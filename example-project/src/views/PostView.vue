@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img class="w-100" :src="'/src/assets/post-images/' + post.picture" alt="Post image">
+        <img class="w-100" :src="$api + post.picture" alt="Post image">
         <h1>{{ post.title }}</h1>
         <p>Posted: {{ post.datePosted }}</p>
         <article>{{ post.text }}</article>
@@ -8,7 +8,9 @@
 </template>
 
 <script>
-import { getPost } from '@/data/posts.js';
+import axios from 'axios';
+
+
 
 export default {
     name: 'PostView',
@@ -19,16 +21,20 @@ export default {
     },
 
     mounted() {
-        this.getPost();
+        setTimeout(() => {
+            this.getPost();
+        }, 5000)
     },
 
     methods: {
         getPost() {
-            try {
-                this.post = getPost(this.$route.params.id);
-            } catch(err) {
+            axios.get(this.$api + '/post/' + this.$route.params.id)
+            .then((res) => {
+                this.post = res.data;
+            }).catch((err) => {
                 this.$router.push('/not-found');
-            }  
+
+            });
         }
     }
 }
