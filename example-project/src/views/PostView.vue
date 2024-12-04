@@ -21,9 +21,7 @@ export default {
     },
 
     mounted() {
-        setTimeout(() => {
-            this.getPost();
-        }, 5000)
+        this.getPost();
     },
 
     methods: {
