@@ -15,7 +15,7 @@
                             <h5 class="card-title">
                                 <RouterLink :to="`/post/${p.id}`">{{
                                     p.title
-                                }}</RouterLink>
+                                    }}</RouterLink>
                             </h5>
                             <p class="card-text">{{ p.text }}</p>
                         </div>
@@ -65,7 +65,7 @@ export default {
 
     mounted() {
         this.getPosts();
-        window.addEventListener('scroll', this.scrollEventHandler)
+        // window.addEventListener('scroll', this.scrollEventHandler)
     },
 
     methods: {
