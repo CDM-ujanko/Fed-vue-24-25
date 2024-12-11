@@ -15,6 +15,15 @@
           </RouterLink>
         </li>
       </ul>
+
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <RouterLink to="/Admin"
+                      class="nav-link">
+            Admin
+          </RouterLink>
+        </li>
+      </ul>
     </div>
   </nav>
 
