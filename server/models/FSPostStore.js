@@ -33,7 +33,7 @@ export class FSPostStore extends AbstractPostStore {
     }
 
     async create(item) {
-        item.id = Date.now();
+        item.id = Date.now().toString();
         this._posts.push(item);
         await writeData(this._posts);
         return item;
@@ -49,12 +49,24 @@ export class FSPostStore extends AbstractPostStore {
         return matches[0];
     }
 
-    update(item) {
-        throw new Error('Update is not implemented');
+    async update(item) {
+        let post = this.read(item.id);
+        let index = this._posts.findIndex(p => p.id === post.id);
+
+        this._posts[index] = item;
+        await writeData(this._posts);
+        return item;
     }
 
-    delete(id) {
-        throw new Error('Delete is not implemented');
+    async delete(id) {
+        let index = this._posts.findIndex(p => p.id === id);
+        if (index === -1) {
+            throw new Error('No such id');
+        }
+
+        this._posts.splice(index, 1);
+        await writeData(this._posts);
+        return id;
     }
 
     list(offset = 0, limit = 6) {

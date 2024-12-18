@@ -50,7 +50,6 @@ app.get('/post/:id', (req, res) => {
 });
 
 app.post('/post', upload.single('picture'), async (req, res) => {
-    console.log(req.file, req.body);
     if (!req.file) {
         res.status(400).json('File is required');
         return;
@@ -60,8 +59,37 @@ app.post('/post', upload.single('picture'), async (req, res) => {
     item.picture = req.file.path.replace('static', '');
 
     res.json(await store.create(item));
+});
+
+app.post('/post/:id', upload.single('picture'), async (req, res) => {
+    console.log(req.file, req.body);
+    try {
+        let post = store.read(req.params.id)
+        let item = req.body;
+
+        post = { ...post, ...item }
+
+        if (req.file) {
+            console.log('picure we have');
+            post.picture = req.file.path.replace('static', '');
+        }
+
+        res.json(await store.update(item));
+    }
+
+    catch (e) {
+        res.status(400).json(e.message);
+    }
 })
 
+app.get('/post/:id/delete', (req, res) => {
+    try {
+        let id = store.delete(req.params.id)
+        res.json(id);
+    } catch (e) {
+        res.status(400).json(e.message);
+    }
+});
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 });

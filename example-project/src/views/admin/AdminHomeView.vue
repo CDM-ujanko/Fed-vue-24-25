@@ -25,6 +25,8 @@
                              width="100px"></td>
                     <td>{{ post.datePosted }}</td>
                     <td>
+                        <button class="btn btn-danger"
+                                @click="deletePost(post.id)">Delete</button>
                         <RouterLink :to="`/admin/post/${post.id}`">Edit</RouterLink>
                     </td>
                 </tr>
@@ -88,6 +90,22 @@ export default {
                 this.loading = false;
             })
         },
+
+        deletePost(id) {
+            if (!confirm('Are you sure you want to delete this post?')) {
+                return;
+            }
+
+            this.loading = true;
+            axios.get(`${this.$api}/post/${id}/delete`)
+                .then((res) => {
+                    this.$router.push('/admin');
+                }).catch((e) => {
+                    console.error(e);
+                }).finally(() => {
+                    this.loading = false;
+                })
+        }
     }
 
 }
