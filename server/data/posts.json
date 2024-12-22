@@ -96,5 +96,26 @@
     "title": "Tourmania",
     "text": "Ullamco est ullamco sunt ad cillum magna. Est Lorem ea in aute. Qui ex est minim aliquip laborum consectetur velit ullamco dolor. Voluptate consectetur minim officia magna. Enim aliqua magna culpa irure reprehenderit laborum duis minim sit est officia dolore reprehenderit. Non esse veniam tempor adipisicing adipisicing non do deserunt laborum proident exercitation pariatur consectetur adipisicing. Nisi enim veniam Lorem mollit laboris deserunt ut quis. Ut minim id duis consectetur est in deserunt. Sit fugiat est pariatur velit nulla ipsum duis sit excepteur laboris duis. Laborum eu ex velit duis minim. Minim consectetur est elit cupidatat elit enim officia eu qui. Magna nisi minim cupidatat ad occaecat anim. Duis in minim nostrud ex sit ullamco irure Lorem incididunt culpa commodo ipsum. Ipsum qui exercitation nisi eu mollit. Nulla eu ipsum sint incididunt.",
     "datePosted": "Fri Jun 10 2016 06:11:55 GMT+0200 (Central European Summer Time)"
+  },
+  {
+    "title": "Test 1 ",
+    "text": "Test",
+    "datePosted": "Sat, 21 Dec 2024 00:00:00 GMT",
+    "picture": "/post-images/1734860153320.jpg",
+    "id": "1734860153362"
+  },
+  {
+    "title": "Test 2",
+    "text": "Test",
+    "datePosted": "Tue, 24 Dec 2024 00:00:00 GMT",
+    "picture": "/post-images/1734860257375.jpg",
+    "id": "1734860257396"
+  },
+  {
+    "title": "test",
+    "text": "Test",
+    "datePosted": "Thu, 19 Dec 2024 00:00:00 GMT",
+    "picture": "/post-images/1734861102510.jpg",
+    "id": "1734861102538"
   }
 ]

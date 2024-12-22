@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import express from 'express';
 import multer from 'multer';
+import fs from 'fs/promises';
 
 import { FSPostStore } from './models/FSPostStore.js';
 
@@ -10,8 +11,11 @@ const PORT = process.env.PORT;
 
 const store = new FSPostStore();
 
+const STATIC_DIR = 'static'
+const POST_IMAGE_LOCATION = '/post-images'
+
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'static/post-images'),
+    destination: (req, file, cb) => cb(null, STATIC_DIR + POST_IMAGE_LOCATION),
     filename: (req, file, cb) => cb(null, `${Date.now()}.${file.originalname.split('.').slice(-1)}`)
 })
 
@@ -56,7 +60,7 @@ app.post('/post', upload.single('picture'), async (req, res) => {
     }
 
     let item = req.body;
-    item.picture = req.file.path.replace('static', '');
+    item.picture = req.file.path.replace(STATIC_DIR, '');
 
     res.json(await store.create(item));
 });
@@ -71,7 +75,7 @@ app.post('/post/:id', upload.single('picture'), async (req, res) => {
 
         if (req.file) {
             console.log('picure we have');
-            post.picture = req.file.path.replace('static', '');
+            post.picture = req.file.path.replace(STATIC_DIR, '');
         }
 
         res.json(await store.update(item));
@@ -90,6 +94,26 @@ app.get('/post/:id/delete', (req, res) => {
         res.status(400).json(e.message);
     }
 });
+
+app.get('/gallery', async (req, res) => {
+    let paths = (await fs.readdir(STATIC_DIR + POST_IMAGE_LOCATION))
+        .map(p => `${POST_IMAGE_LOCATION}/${p}`);
+    res.json(paths);
+})
+
+app.post('/upload', upload.single('picture'), async (req, res) => {
+    try {
+        if (!req.file) {
+            res.status(400).json('File is required');
+            return;
+        }
+        res.json(req.file.path.replace(STATIC_DIR, ''));
+    }
+    catch (e) {
+        res.status(400).json(e.message);
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 });

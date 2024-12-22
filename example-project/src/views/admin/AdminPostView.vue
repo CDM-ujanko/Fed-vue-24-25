@@ -1,18 +1,20 @@
 <template>
     <div class="mt-3">
+        <FilePicker v-model="post.picture" />
+
         <img v-if="post.picture"
              class="thumbnail"
              :src="$api + post.picture"
              alt="Post image">
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label for="picture">Picture</label>
             <input type="file"
                    class="form-control"
                    id="picture"
                    @change="onPictureChange"
                    accept="image/png, image/jpeg">
-        </div>
+        </div> -->
 
         <div class="mb-3">
             <label for="title"
@@ -57,9 +59,13 @@
 
 <script>
 import axios from 'axios';
+import FilePicker from './FilePicker.vue';
 
 export default {
     name: 'AdminPostView',
+    components: {
+        FilePicker
+    },
     data() {
         return {
             post: {},
@@ -141,7 +147,7 @@ export default {
             data.datePosted = new Date(this.datePosted).toUTCString();
             this.loading = true;
 
-            axios.post(this.$api + '/post/' + this.post.id ?? '',
+            axios.post(this.$api + '/post/' + (this.post.id ?? ''),
                 data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then((res) => {
