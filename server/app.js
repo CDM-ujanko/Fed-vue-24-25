@@ -24,14 +24,15 @@ const upload = multer({ storage });
 // Start server
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     // Pass to next layer of middleware
     next();
 });
 
+app.use(express.json());
 app.use(express.static('static'));
-
 
 app.get('/post', async (req, res) => {
     try {
@@ -53,18 +54,16 @@ app.get('/post/:id', (req, res) => {
     }
 });
 
-app.post('/post', upload.single('picture'), async (req, res) => {
-    if (!req.file) {
-        res.status(400).json('File is required');
-        return;
-    }
-
+// Create a new post
+app.post('/post', async (req, res) => {
     let item = req.body;
-    item.picture = req.file.path.replace(STATIC_DIR, '');
+    // item.picture = req.file.path.replace(STATIC_DIR, '');
 
+    console.log('hitting create', item);
     res.json(await store.create(item));
 });
 
+// Edit an existing post
 app.post('/post/:id', upload.single('picture'), async (req, res) => {
     console.log(req.file, req.body);
     try {

@@ -7,14 +7,7 @@
              :src="$api + post.picture"
              alt="Post image">
 
-        <!-- <div class="mb-3">
-            <label for="picture">Picture</label>
-            <input type="file"
-                   class="form-control"
-                   id="picture"
-                   @change="onPictureChange"
-                   accept="image/png, image/jpeg">
-        </div> -->
+
 
         <div class="mb-3">
             <label for="title"
@@ -69,7 +62,6 @@ export default {
     data() {
         return {
             post: {},
-            picture: null,
             datePosted: null,
             loading: false
         }
@@ -86,8 +78,7 @@ export default {
         isValid() {
             //return this.picture && this.post.title && this.post.text && this.datePosted;
 
-            // Only new posts must have a picture, new posts will not have an id.
-            if (!this.post.id && !this.picture) {
+            if (!this.post.picture) {
                 return false;
             }
 
@@ -100,6 +91,13 @@ export default {
             }
 
             return true;
+        },
+
+        /**
+         * Are we in edit mode.
+         */
+        isEditMode() {
+            return !!this.$route.id;
         }
     },
 
@@ -128,36 +126,27 @@ export default {
             return `${d.getFullYear()}-${month}-${day}`
         },
 
-        onPictureChange(e) {
-            let files = e.target.files || e.dataTransfer.files;
-
-            if (!files.length) {
-                return;
-            }
-
-            this.picture = files[0]
-        },
-
         savePost() {
             let data = JSON.parse(JSON.stringify(this.post));
-            if (this.picture) {
-                data.picture = this.picture;
-            }
 
             data.datePosted = new Date(this.datePosted).toUTCString();
             this.loading = true;
 
-            axios.post(this.$api + '/post/' + (this.post.id ?? ''),
+            axios.post(this.$api + '/post' + (this.isEditMode ? `/${this.$route.id}` : ''),
                 data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            }).then((res) => {
-                console.log(res);
-                this.$router.push('/admin');
-            }).catch((e) => {
-                console.error(e)
-            }).finally(() => {
-                this.loading = false;
+                headers: {
+                    // Overwrite Axios's automatically set Content-Type
+                    'Content-Type': 'application/json'
+                }
             })
+                .then((res) => {
+                    console.log(res);
+                    this.$router.push('/admin');
+                }).catch((e) => {
+                    console.error(e)
+                }).finally(() => {
+                    this.loading = false;
+                })
 
         }
     }
