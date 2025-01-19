@@ -1,3 +1,4 @@
+// @ts-nocheck
 import 'dotenv/config'
 import express from 'express';
 import multer from 'multer';
@@ -36,10 +37,13 @@ app.use(express.static('static'));
 
 app.get('/post', async (req, res) => {
     try {
-        let offset = req.query.offset ? parseInt(req.query.offset) : 0;
-        let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+        let page = req.query.page ? parseInt(req.query.page) : 0;
+        let pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 6;
 
-        res.json(store.list(offset, limit));
+        let start = page * pageSize;
+        let end = start + pageSize;
+
+        res.json(store.list(start, end));
     } catch (e) {
         res.status(400).json(e.message);
     }
@@ -57,25 +61,17 @@ app.get('/post/:id', (req, res) => {
 // Create a new post
 app.post('/post', async (req, res) => {
     let item = req.body;
-    // item.picture = req.file.path.replace(STATIC_DIR, '');
-
-    console.log('hitting create', item);
     res.json(await store.create(item));
 });
 
 // Edit an existing post
-app.post('/post/:id', upload.single('picture'), async (req, res) => {
+app.post('/post/:id', async (req, res) => {
     console.log(req.file, req.body);
     try {
         let post = store.read(req.params.id)
         let item = req.body;
 
         post = { ...post, ...item }
-
-        if (req.file) {
-            console.log('picure we have');
-            post.picture = req.file.path.replace(STATIC_DIR, '');
-        }
 
         res.json(await store.update(item));
     }

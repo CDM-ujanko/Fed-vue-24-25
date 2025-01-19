@@ -1,13 +1,12 @@
 <template>
     <div class="mt-3">
-        <FilePicker v-model="post.picture" />
+        <FilePicker v-model="post.picture"
+                    class="mb-3" />
 
         <img v-if="post.picture"
-             class="thumbnail"
+             class="thumbnail mb-3"
              :src="$api + post.picture"
              alt="Post image">
-
-
 
         <div class="mb-3">
             <label for="title"
@@ -59,6 +58,7 @@ export default {
     components: {
         FilePicker
     },
+
     data() {
         return {
             post: {},
@@ -68,7 +68,6 @@ export default {
     },
 
     mounted() {
-        console.log('mounted admin post view');
         if (this.$route.params.id) {
             this.getPost();
         }
@@ -97,7 +96,7 @@ export default {
          * Are we in edit mode.
          */
         isEditMode() {
-            return !!this.$route.id;
+            return !!this.$route.params.id;
         }
     },
 
@@ -120,8 +119,9 @@ export default {
          */
         getTimeString(date) {
             let d = new Date(date ?? '');
-            let month = ('00' + d.getMonth()).slice(-2);
-            let day = ('00' + d.getDay()).slice(-2);
+
+            let month = ('00' + (d.getMonth() + 1)).slice(-2);
+            let day = ('00' + d.getDate()).slice(-2);
 
             return `${d.getFullYear()}-${month}-${day}`
         },
@@ -132,7 +132,7 @@ export default {
             data.datePosted = new Date(this.datePosted).toUTCString();
             this.loading = true;
 
-            axios.post(this.$api + '/post' + (this.isEditMode ? `/${this.$route.id}` : ''),
+            axios.post(this.$api + '/post' + (this.isEditMode ? `/${this.$route.params.id}` : ''),
                 data, {
                 headers: {
                     // Overwrite Axios's automatically set Content-Type
@@ -140,7 +140,6 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res);
                     this.$router.push('/admin');
                 }).catch((e) => {
                     console.error(e)

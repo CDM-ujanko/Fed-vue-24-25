@@ -15,7 +15,7 @@
                             <h5 class="card-title">
                                 <RouterLink :to="`/post/${p.id}`">{{
                                     p.title
-                                    }}</RouterLink>
+                                }}</RouterLink>
                             </h5>
                             <p class="card-text">{{ p.text }}</p>
                         </div>
@@ -33,7 +33,7 @@
                 </div>
 
                 <button v-if="hasMore"
-                        @click="updateOffset"
+                        @click="loadMore"
                         :disabled="loading"
                         class="btn btn-primary mt-4 mx-auto">
                     Load more
@@ -56,8 +56,8 @@ export default {
     data() {
         return {
             posts: [],
-            offset: 0,
-            limit: 6,
+            page: 0,
+            pageSize: 6,
             loading: false,
             hasMore: true,
         }
@@ -69,17 +69,16 @@ export default {
     },
 
     methods: {
-        updateOffset() {
-            this.offset += this.limit;
+        loadMore() {
+            this.page++;
             this.getPosts();
         },
 
         getPosts() {
             this.loading = true;
-            axios.get(`${this.$api}/post?offset=${this.offset}&limit=${this.limit}`).then((res) => {
-                console.log(res);
+            axios.get(`${this.$api}/post?page=${this.page}&pageSize=${this.pageSize}`).then((res) => {
                 this.posts = this.posts.concat(res.data.posts);
-                this.hasMore = res.data.totalSize > this.offset + this.limit;
+                this.hasMore = res.data.totalSize > this.page * this.pageSize + this.pageSize;
             }).catch((e) => {
                 console.error(e);
             }).finally(() => {

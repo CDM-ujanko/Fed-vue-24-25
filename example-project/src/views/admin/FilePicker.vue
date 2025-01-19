@@ -6,7 +6,7 @@
             <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Upload FIle</h5>
+                        <h5 class="modal-title">Select File</h5>
                         <button type="button"
                                 class="btn-close"
                                 data-bs-dismiss="modal"
@@ -52,9 +52,8 @@
             </div>
         </div>
 
-        {{ modelValue }}
         <button @click="open"
-                class="btn btn-primary"> Upload File {{ isOpen }}</button>
+                class="btn btn-primary">Select File</button>
 
 
     </div>

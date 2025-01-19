@@ -69,7 +69,7 @@ export class FSPostStore extends AbstractPostStore {
         return id;
     }
 
-    list(offset = 0, limit = 6) {
+    list(start = 0, end = 6) {
         let posts = structuredClone(this._posts).map((p) => {
             // let post = structuredClone(p);
             p.text = p.text.split(' ').slice(0, 5).join(' ');
@@ -77,8 +77,8 @@ export class FSPostStore extends AbstractPostStore {
         });
 
         return {
-            posts: posts.slice(offset, offset + limit),
-            totalSize: posts.length
+            posts: posts.slice(start, end),
+            totalSize: posts.length,
         };
     }
 }

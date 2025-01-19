@@ -9,7 +9,6 @@
         <table class="table table-striped my-3">
             <thead>
                 <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Title</th>
                     <th scope="col">Picture</th>
                     <th scope="col">Date Posted</th>
@@ -18,31 +17,31 @@
             </thead>
             <tbody>
                 <tr v-for="post in posts">
-                    <th>{{ post.id }}</th>
                     <td>{{ post.title }}</td>
-                    <td><img :src="$api + post.picture"
+                    <td class="text-break"><img :src="$api + post.picture"
                              :title="post.picture"
                              width="100px"></td>
-                    <td>{{ post.datePosted }}</td>
+                    <td>{{ humanizeDate(post.datePosted) }}</td>
                     <td>
-                        <button class="btn btn-danger"
+                        <RouterLink :to="`/admin/post/${post.id}`"
+                                    tag="button"
+                                    class="btn btn-outline-primary btn-sm px-2 py-0 mb-2 me-2">Edit</RouterLink>
+                        <button class="btn btn-outline-danger btn-sm px-2 py-0 mb-2 me-2"
                                 @click="deletePost(post.id)">Delete</button>
-                        <RouterLink :to="`/admin/post/${post.id}`">Edit</RouterLink>
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <nav aria-label="...">
+        <nav aria-label="">
             <ul class="pagination pagination-sm">
-                <li class="page-item active"
-                    aria-current="page">
-                    <span class="page-link">1</span>
+                <li v-for="p in pages"
+                    class="page-item"
+                    :class="{ active: p === page + 1 }"
+                    aria-current="page"
+                    @click="goToPage(p - 1)">
+                    <span class="page-link">{{ p }}</span>
                 </li>
-                <li class="page-item"><a class="page-link"
-                       href="#">2</a></li>
-                <li class="page-item"><a class="page-link"
-                       href="#">3</a></li>
             </ul>
         </nav>
     </div>
@@ -60,35 +59,58 @@ export default {
     data() {
         return {
             posts: [],
-            offset: 0,
-            limit: 25,
-            loading: false,
-            hasMore: true,
+            page: 0,
+            pageSize: 5,
+            pages: 0,
+            loading: false
         }
     },
 
     mounted() {
         this.getPosts();
-
     },
 
     methods: {
-        updateOffset() {
-            this.offset += this.limit;
+        /**
+         * Convert a date string to a human readable format.
+         * @param {String} dateString the date string.
+         * @returns {Sting} The human readable date.
+         */
+        humanizeDate(dateString) {
+            let date = new Date(dateString);
+
+            if (date === "Invalid Date" || isNaN(date)) {
+                return '';
+            }
+
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            };
+
+            return date.toLocaleDateString('en-EN', options);
+        },
+
+        goToPage(p) {
+            this.page = p;
             this.getPosts();
         },
 
+        /** 
+         * Fetch a page of posts based on offset and limit.
+         */
         getPosts() {
             this.loading = true;
-            axios.get(`${this.$api}/post?offset=${this.offset}&limit=${this.limit}`).then((res) => {
-                console.log(res);
-                this.posts = this.posts.concat(res.data.posts);
-                this.hasMore = res.data.totalSize > this.offset + this.limit;
-            }).catch((e) => {
-                console.error(e);
-            }).finally(() => {
-                this.loading = false;
-            })
+            axios.get(`${this.$api}/post?page=${this.page}&pageSize=${this.pageSize}`)
+                .then((res) => {
+                    this.posts = res.data.posts;
+                    this.pages = Math.ceil(res.data.totalSize / this.pageSize)
+                }).catch((e) => {
+                    console.error(e);
+                }).finally(() => {
+                    this.loading = false;
+                })
         },
 
         deletePost(id) {
@@ -99,7 +121,7 @@ export default {
             this.loading = true;
             axios.get(`${this.$api}/post/${id}/delete`)
                 .then((res) => {
-                    this.$router.push('/admin');
+                    this.$router.go()
                 }).catch((e) => {
                     console.error(e);
                 }).finally(() => {
