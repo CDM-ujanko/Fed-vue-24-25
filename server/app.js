@@ -4,13 +4,14 @@ import express from 'express';
 import multer from 'multer';
 import fs from 'fs/promises';
 
-import { FSPostStore } from './models/FSPostStore.js';
+//import { FSPostStore } from './models/FSPostStore.js';
+import { MySqlPostStore } from './models/MySqlPostStore.js';
 
 const app = express();
 
 const PORT = process.env.PORT;
 
-const store = new FSPostStore();
+const store = new MySqlPostStore();
 
 const STATIC_DIR = 'static'
 const POST_IMAGE_LOCATION = '/post-images'
@@ -43,15 +44,17 @@ app.get('/post', async (req, res) => {
         let start = page * pageSize;
         let end = start + pageSize;
 
-        res.json(store.list(start, end));
+        let posts = await store.list(start, end);
+        res.json(posts);
     } catch (e) {
         res.status(400).json(e.message);
     }
 });
 
-app.get('/post/:id', (req, res) => {
+app.get('/post/:id', async (req, res) => {
     try {
-        let post = store.read(req.params.id)
+        let post = await store.read(req.params.id)
+        console.log(post);
         res.json(post);
     } catch (e) {
         res.status(400).json(e.message);
@@ -81,9 +84,9 @@ app.post('/post/:id', async (req, res) => {
     }
 })
 
-app.get('/post/:id/delete', (req, res) => {
+app.get('/post/:id/delete', async (req, res) => {
     try {
-        let id = store.delete(req.params.id)
+        let id = await store.delete(req.params.id);
         res.json(id);
     } catch (e) {
         res.status(400).json(e.message);

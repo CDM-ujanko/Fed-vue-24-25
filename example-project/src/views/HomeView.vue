@@ -15,7 +15,7 @@
                             <h5 class="card-title">
                                 <RouterLink :to="`/post/${p.id}`">{{
                                     p.title
-                                }}</RouterLink>
+                                    }}</RouterLink>
                             </h5>
                             <p class="card-text">{{ p.text }}</p>
                         </div>
@@ -77,6 +77,7 @@ export default {
         getPosts() {
             this.loading = true;
             axios.get(`${this.$api}/post?page=${this.page}&pageSize=${this.pageSize}`).then((res) => {
+                console.log(res.data);
                 this.posts = this.posts.concat(res.data.posts);
                 this.hasMore = res.data.totalSize > this.page * this.pageSize + this.pageSize;
             }).catch((e) => {
@@ -87,7 +88,6 @@ export default {
         },
 
         scrollEventHandler(e) {
-            console.log(e);
             const tracker = e.target;
             const limit = tracker.scrollHeight - tracker.clientHeight;
             if (e.target.scrollTop === limit) {
