@@ -26,9 +26,9 @@ export class MySqlPostStore extends AbstractPostStore {
 
     async create(item) {
         return await new Promise((resolve, reject) => {
-            // TODO: Fix date
+            let date = item.datePosted.slice(0, 19).replace('T', ' ');
             db.query(`INSERT INTO posts (picture , title, text, datePosted) VALUES(?, ?, ?, ?);`,
-                [item.picture, item.title, item.text, "2020-01-01 15:10:10"],
+                [item.picture, item.title, item.text, date],
                 (err, res) => {
                     if (err) {
                         return reject(err)
@@ -53,9 +53,9 @@ export class MySqlPostStore extends AbstractPostStore {
 
     async update(item) {
         return await new Promise((resolve, reject) => {
-            // TODO: Fix date
+            let date = item.datePosted.slice(0, 19).replace('T', ' ');
             db.query(`UPDATE posts SET picture = ?, title = ?, text = ?, datePosted = ? WHERE id = ?;`,
-                [item.picture, item.title, item.text, "2020-01-01 15:10:10", item.id],
+                [item.picture, item.title, item.text, date, item.id],
                 (err, res) => {
                     if (err) {
                         return reject(err)
@@ -80,14 +80,13 @@ export class MySqlPostStore extends AbstractPostStore {
 
     async list(start = 0, end = 6) {
         return await new Promise((resolve, reject) => {
-            db.query('SELECT COUNT(id) OVER () as totalSize, id, picture, title, text, datePosted FROM posts GROUP BY id LIMIT ? OFFSET ?;',
+            db.query(`SELECT COUNT(id) OVER () as totalSize, id, picture, title, text, datePosted 
+                        FROM posts GROUP BY id ORDER BY datePosted DESC LIMIT ? OFFSET ?;`,
                 [end - start, start],
                 (err, rows) => {
                     if (err) {
                         return reject(err)
                     }
-
-                    console.log(rows);
 
                     return resolve({
                         posts: rows,

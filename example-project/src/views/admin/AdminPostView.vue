@@ -129,7 +129,7 @@ export default {
         savePost() {
             let data = JSON.parse(JSON.stringify(this.post));
 
-            data.datePosted = new Date(this.datePosted).toUTCString();
+            data.datePosted = new Date(this.datePosted).toISOString();
             this.loading = true;
 
             axios.post(this.$api + '/post' + (this.isEditMode ? `/${this.$route.params.id}` : ''),

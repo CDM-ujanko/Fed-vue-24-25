@@ -6,12 +6,14 @@ import fs from 'fs/promises';
 
 //import { FSPostStore } from './models/FSPostStore.js';
 import { MySqlPostStore } from './models/MySqlPostStore.js';
+import { MySqlUserStore } from './models/MySqlUserStore.js';
 
 const app = express();
 
 const PORT = process.env.PORT;
 
 const store = new MySqlPostStore();
+const userStore = new MySqlUserStore();
 
 const STATIC_DIR = 'static'
 const POST_IMAGE_LOCATION = '/post-images'
@@ -69,7 +71,6 @@ app.post('/post', async (req, res) => {
 
 // Edit an existing post
 app.post('/post/:id', async (req, res) => {
-    console.log(req.file, req.body);
     try {
         let post = store.read(req.params.id)
         let item = req.body;
@@ -80,6 +81,7 @@ app.post('/post/:id', async (req, res) => {
     }
 
     catch (e) {
+        console.error(e);
         res.status(400).json(e.message);
     }
 })
@@ -111,6 +113,18 @@ app.post('/upload', upload.single('picture'), async (req, res) => {
         res.status(400).json(e.message);
     }
 })
+
+app.post('/user', async (req, res) => {
+    console.log('got from api', req.body);
+    // let item = req.body;
+    res.json(await userStore.create(req.body));
+});
+
+app.post('/user/login', async (req, res) => {
+    let match = await userStore.check(req.body.username, req.body.password);
+    console.log(match);
+    res.json(match);
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
