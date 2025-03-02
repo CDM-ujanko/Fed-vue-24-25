@@ -46,10 +46,7 @@ export class MySqlUserStore {
     // }
 
     async create(user) {
-        console.log(user, Number(process.env.USER_SLAT_ROUNDS))
         let hash = await bcrypt.hash(user.password, Number(process.env.USER_SLAT_ROUNDS))
-
-        console.log(hash);
 
         return await new Promise((resolve, reject) => {
             db.query(`INSERT INTO users (username , password, firstName, lastName) VALUES(?, ?, ?, ?);`,
@@ -61,6 +58,18 @@ export class MySqlUserStore {
 
                     return resolve(res);
                 })
+        })
+    }
+
+    read(username) {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM users WHERE username = ?;', username, (err, rows) => {
+                if (err) {
+                    return reject(err)
+                }
+
+                return resolve(rows[0]);
+            })
         })
     }
 
