@@ -119,7 +119,9 @@ export default {
             }
 
             this.loading = true;
-            axios.get(`${this.$api}/post/${id}/delete`)
+            axios.get(`${this.$api}/post/${id}/delete`, {
+                headers: { 'Authorization': `Bearer ${this.$store.token}` }
+            })
                 .then((res) => {
                     this.$router.go()
                 }).catch((e) => {

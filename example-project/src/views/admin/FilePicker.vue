@@ -106,7 +106,9 @@ export default {
 
         getImages() {
             this.loading = true;
-            axios.get(this.$api + '/gallery')
+            axios.get(this.$api + '/gallery', {
+                headers: { 'Authorization': `Bearer ${this.$store.token}` }
+            })
                 .then(resp => {
                     this.images = resp.data;
                 }).catch((e) => {
@@ -120,7 +122,10 @@ export default {
             this.loading = true;
             axios.post(this.$api + '/upload',
                 { picture: this.picture }, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${this.$store.token}`
+                }
             }).then((res) => {
                 this.images.unshift(res.data);
                 this.picture = null;

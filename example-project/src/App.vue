@@ -18,7 +18,8 @@
 
       <ul class="navbar-nav">
         <li class="nav-item">
-          <RouterLink to="/Admin"
+          <RouterLink v-if="$store.isLoggedIn"
+                      to="/admin"
                       class="nav-link">
             Admin
           </RouterLink>
@@ -32,6 +33,15 @@
 
 
 <script>
+
+export default {
+  name: 'App',
+  data() {
+    return {
+
+    }
+  }
+}
 
 </script>
 

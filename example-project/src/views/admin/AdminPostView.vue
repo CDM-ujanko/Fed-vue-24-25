@@ -132,12 +132,17 @@ export default {
             data.datePosted = new Date(this.datePosted).toISOString();
             this.loading = true;
 
+            let headers = {
+                'Content-Type': 'application/json'
+            }
+
+            if (this.isEditMode) {
+                headers.Authorization = `Bearer ${this.$store.token}`
+            }
+
             axios.post(this.$api + '/post' + (this.isEditMode ? `/${this.$route.params.id}` : ''),
                 data, {
-                headers: {
-                    // Overwrite Axios's automatically set Content-Type
-                    'Content-Type': 'application/json'
-                }
+                headers: headers
             })
                 .then((res) => {
                     this.$router.push('/admin');

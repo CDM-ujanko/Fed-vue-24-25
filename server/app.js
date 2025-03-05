@@ -8,6 +8,8 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { Strategy, ExtractJwt } from 'passport-jwt'
 
+import { errorHandler } from './helpers/ErrorMiddleware.js';
+
 import userProtectedRoutes from './routes/user-protected.js';
 
 //import { FSPostStore } from './models/FSPostStore.js';
@@ -36,7 +38,7 @@ app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
     // Pass to next layer of middleware
     next();
 });
@@ -44,11 +46,13 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(express.static('static'));
 
+app.use(errorHandler);
+
 app.use('/user', userProtectedRoutes);
 
 app.use(passport.initialize());
 
-app.get('/post', async (req, res) => {
+app.get('/post', async (req, res, next) => {
     try {
         let page = req.query.page ? parseInt(req.query.page) : 0;
         let pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 6;
@@ -59,17 +63,16 @@ app.get('/post', async (req, res) => {
         let posts = await store.list(start, end);
         res.json(posts);
     } catch (e) {
-        res.status(400).json(e.message);
+        next(e)
     }
 });
 
-app.get('/post/:id', async (req, res) => {
+app.get('/post/:id', async (req, res, next) => {
     try {
         let post = await store.read(req.params.id)
-        console.log(post);
         res.json(post);
     } catch (e) {
-        res.status(400).json(e.message);
+        next(e)
     }
 });
 
@@ -80,7 +83,7 @@ app.post('/post', passport.authenticate('jwt', { session: false }), async (req, 
 });
 
 // Edit an existing post
-app.post('/post/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/post/:id', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
     try {
         let post = store.read(req.params.id)
         let item = req.body;
@@ -91,24 +94,27 @@ app.post('/post/:id', passport.authenticate('jwt', { session: false }), async (r
     }
 
     catch (e) {
-        console.error(e);
-        res.status(400).json(e.message);
+        next(e)
     }
 })
 
-app.get('/post/:id/delete', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/post/:id/delete', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
     try {
         let id = await store.delete(req.params.id);
         res.json(id);
     } catch (e) {
-        res.status(400).json(e.message);
+        next(e)
     }
 });
 
-app.get('/gallery', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    let paths = (await fs.readdir(STATIC_DIR + POST_IMAGE_LOCATION))
-        .map(p => `${POST_IMAGE_LOCATION}/${p}`);
-    res.json(paths);
+app.get('/gallery', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+    try {
+        let paths = (await fs.readdir(STATIC_DIR + POST_IMAGE_LOCATION))
+            .map(p => `${POST_IMAGE_LOCATION}/${p}`);
+        res.json(paths);
+    } catch (e) {
+        next(e)
+    }
 })
 
 app.post('/upload', [passport.authenticate('jwt', { session: false }), upload.single('picture')], async (req, res) => {
@@ -120,12 +126,12 @@ app.post('/upload', [passport.authenticate('jwt', { session: false }), upload.si
         res.json(req.file.path.replace(STATIC_DIR, ''));
     }
     catch (e) {
-        res.status(400).json(e.message);
+        next(e)
     }
 })
 
 app.post('/login', async (req, res) => {
-    if (!req.body.username || !req.body.password) {
+    if (!req.body?.username || !req.body?.password) {
         res.status(401).json('Invalid username or password!');
     }
 

@@ -16,8 +16,12 @@ router.get('/hello', (req, res) => {
     res.json('ok!');
 });
 
-router.post('/', async (req, res) => {
-    res.json(await userStore.create(req.body));
+router.post('/', async (req, res, next) => {
+    try {
+        res.json(await userStore.create(req.body));
+    } catch (e) {
+        next(e);
+    }
 });
 
 export default router;
